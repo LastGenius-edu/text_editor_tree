@@ -73,6 +73,8 @@ def main(std_screen):
 
         if char in (ord('q'), ord('Q')):
             break
+        else:
+            text_box.addch(char)
 
         std_screen.noutrefresh()
         text_editor.noutrefresh()
