@@ -5,6 +5,7 @@ Sultanov Andriy
 """
 import curses
 from curses import wrapper
+from curses.textpad import Textbox, rectangle
 from time import sleep
 
 
@@ -68,18 +69,21 @@ def main(std_screen):
     text_box.noutrefresh()
     curses.doupdate()
 
-    while True:
-        char = text_editor.getch()
+    box = Textbox(text_box)
+    box.edit()
 
-        if char in (ord('q'), ord('Q')):
-            break
-        else:
-            text_box.addch(char)
-
-        std_screen.noutrefresh()
-        text_editor.noutrefresh()
-        text_box.noutrefresh()
-        curses.doupdate()
+    # while True:
+    #     char = text_editor.getch()
+    #
+    #     if char in (ord('q'), ord('Q')):
+    #         break
+    #     else:
+    #         text_box.addch(char)
+    #
+    #     std_screen.noutrefresh()
+    #     text_editor.noutrefresh()
+    #     text_box.noutrefresh()
+    #     curses.doupdate()
 
 
 if __name__ == '__main__':
