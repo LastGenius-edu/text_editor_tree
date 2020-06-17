@@ -39,7 +39,7 @@ class Tree:
         """
         Initializes an empty tree of edits
         """
-        self._root = None
+        self._root = Node('root', True)
         self._current_node = None
         self._temporary_selection = 0
 
@@ -48,11 +48,11 @@ class Tree:
         Adds a node to the tree. If needed, creates a new branch.
         :return: None
         """
-        if self._root is None:
-            node = Node(char, status, None, None)
-            self._root = node
+        if self._current_node is None:
+            node = Node(char, status, parent=self._root)
+            self._root.children.append(node)
         else:
-            node = Node(char, status, self._current_node, None)
+            node = Node(char, status, self._current_node)
             self._current_node.children.append(node)
 
         self._current_node = node
@@ -62,7 +62,7 @@ class Tree:
         Changes the current node to the previous one, if there is such
         :return:
         """
-        if self._current_node.parent is not None:
+        if self._current_node is not None and self._current_node.char != 'root':
             node = self._current_node
             self._current_node = self._current_node.parent
             return node
@@ -99,7 +99,16 @@ class Tree:
         :return: str
         """
         final_result = ""
-        if self._current_node.parent is not None:
+        if self._current_node is not None:
+            if self._current_node.char != 'root':
+                final_result += f"Undo: {self._current_node}"
+
+            if self._current_node.children:
+                final_result += f" Redo: {self._current_node.children[0]}"
+
+            final_result += "\n"
+
+        if self._current_node is not None and self._current_node.parent is not None:
             final_result += f"{self._current_node.parent}=="
 
         def print_line(node):
@@ -107,14 +116,18 @@ class Tree:
 
             while True:
                 result += str(node) + "=="
-                if node.children:
+                if node is not None and node.children:
                     node = node.children[0]
                 else:
                     break
 
             return result
 
-        final_result += print_line(self._current_node) + "\n"
-        final_result += '\n'.join([f"    |={print_line(child)}" for child in self._current_node.children[1:]])
+        if self._current_node is not None:
+            final_result += print_line(self._current_node) + "\n"
+            branches = [f"    |={print_line(child)}" for child in self._current_node.children[1:]]
+            if self._temporary_selection != 0:
+                branches[self._temporary_selection - 1] = f"- - {branches[self._temporary_selection - 1][4:]}"
+            final_result += '\n'.join(branches)
 
         return final_result

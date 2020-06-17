@@ -55,7 +55,6 @@ def main(std_screen):
 
     # Add title and menu elements
     std_screen.addstr("Text Editor", curses.A_REVERSE | curses.color_pair(2))
-    std_screen.chgat(-1, curses.A_REVERSE | curses.color_pair(2))
     std_screen.addstr(curses.LINES - 1, 0,
                       "Press 'q' to exit, 'a' to undo, 's' to redo, 'e' to move a branch up, 'd' to move a branch down",
                       curses.A_REVERSE)
@@ -109,30 +108,32 @@ def main(std_screen):
             # Undo the last thing
             node = tree.move_back()
 
-            if node.status:
-                text_box.delch(cur_pos[0], cur_pos[1]-1)
-            else:
-                text_box.addch(node.char)
+            if node is not None:
+                if node.status:
+                    text_box.delch(cur_pos[0], cur_pos[1]-1)
+                else:
+                    text_box.addch(node.char)
 
         elif char in ('s', 'S'):
 
             # Redo the last thing
             node = tree.move_forward()
 
-            if node.status:
-                text_box.addch(node.char)
-            else:
-                text_box.delch(cur_pos[0], cur_pos[1] - 1)
+            if node is not None:
+                if node.status:
+                    text_box.addch(node.char)
+                else:
+                    text_box.delch(cur_pos[0], cur_pos[1] - 1)
 
         elif char in ('e', 'E'):
 
             # Switch the branch upwards
-            pass
+            tree.move_branch_up()
 
         elif char in ('d', 'D'):
 
             # Switch the branch downwards
-            pass
+            tree.move_branch_down()
 
         elif char in possible_characters:
 
