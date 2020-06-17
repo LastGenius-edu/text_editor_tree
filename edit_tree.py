@@ -10,7 +10,7 @@ class Node:
     Node class of one single-character edit
     """
 
-    def __init__(self, char, parent=None, children=None):
+    def __init__(self, char, status=True, parent=None, children=None):
         """
         Creates a single-character edit instance with children
 
@@ -18,6 +18,7 @@ class Node:
         :param children: list
         """
         self.char = char
+        self.status = status
         self.parent = parent
         self.children = [] if children is None else children
 
@@ -26,7 +27,7 @@ class Node:
         Returns a string representation of a node
         :return: str
         """
-        return f"+{self.char}"
+        return f"{'+' if self.status else '-'}{self.char}"
 
 
 class Tree:
@@ -42,16 +43,16 @@ class Tree:
         self._current_node = None
         self._temporary_selection = 0
 
-    def add_node(self, char):
+    def add_node(self, char, status):
         """
         Adds a node to the tree. If needed, creates a new branch.
         :return: None
         """
         if self._root is None:
-            node = Node(char, None, None)
+            node = Node(char, status, None, None)
             self._root = node
         else:
-            node = Node(char, self._current_node, None)
+            node = Node(char, status, self._current_node, None)
             self._current_node.children.append(node)
 
         self._current_node = node
@@ -94,7 +95,9 @@ class Tree:
         Returns a string representation of a part of the tree
         :return: str
         """
-        final_result = f"{self._current_node.parent}=="
+        final_result = ""
+        if self._current_node.parent is not None:
+            final_result += f"{self._current_node.parent}=="
 
         def print_line(node):
             result = ""

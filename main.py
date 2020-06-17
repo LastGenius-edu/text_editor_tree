@@ -6,7 +6,7 @@ Sultanov Andriy
 import string
 import curses
 from curses import wrapper
-from time import sleep
+from edit_tree import Tree
 
 
 def start():
@@ -50,6 +50,8 @@ def main(std_screen):
     """
     Main function of the module
     """
+    tree = Tree()
+    text = []
 
     # Add title and menu elements
     std_screen.addstr("Text Editor", curses.A_REVERSE | curses.color_pair(2))
@@ -69,14 +71,17 @@ def main(std_screen):
     tree_window = curses.newwin(12, curses.COLS, curses.LINES - 13, 0)
     tree_window.box()
 
+    tree_box = tree_window.subwin(10, curses.COLS-4, curses.LINES - 12, 2)
+
     # Refresh all the internal datastructures bottom-up, update the screen
     std_screen.noutrefresh()
     text_editor.noutrefresh()
     text_box.noutrefresh()
     tree_window.noutrefresh()
+    tree_box.noutrefresh()
     curses.doupdate()
 
-    possible_characters = string.letters + string.digits + string.punctuation + " \n"
+    possible_characters = string.ascii_letters + string.digits + string.punctuation + " \n"
 
     while True:
         char = text_editor.getkey()
@@ -96,18 +101,44 @@ def main(std_screen):
             elif cur_pos[0] > 0:
                 text_box.delch(cur_pos[0]-1, curses.COLS - 5)
 
+            # Update the edit tree
+            tree.add_node(text.pop(), False)
+
         elif char in ('a', 'A'):
 
             # Undo the last thing
             pass
 
+        elif char in ('s', 'S'):
+
+            # Redo the last thing
+            pass
+
+        elif char in ('e', 'E'):
+
+            # Switch the branch upwards
+            pass
+
+        elif char in ('d', 'D'):
+
+            # Switch the branch downwards
+            pass
+
         elif char in possible_characters:
+
+            # Update the edit tree and the character to the text_box
+            text.append(char)
+            tree.add_node(char, True)
             text_box.addch(char)
+
+        tree_box.clear()
+        tree_box.addstr(str(tree))
 
         std_screen.noutrefresh()
         text_editor.noutrefresh()
         text_box.noutrefresh()
         tree_window.noutrefresh()
+        tree_box.noutrefresh()
         curses.doupdate()
 
 
