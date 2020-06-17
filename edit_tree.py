@@ -63,7 +63,9 @@ class Tree:
         :return:
         """
         if self._current_node.parent is not None:
+            node = self._current_node
             self._current_node = self._current_node.parent
+            return node
 
     def move_forward(self):
         """
@@ -73,6 +75,7 @@ class Tree:
         if self._current_node.children:
             self._current_node = self._current_node.children[self._temporary_selection]
             self._temporary_selection = 0
+            return self._current_node
 
     def move_branch_up(self):
         """

@@ -107,12 +107,22 @@ def main(std_screen):
         elif char in ('a', 'A'):
 
             # Undo the last thing
-            pass
+            node = tree.move_back()
+
+            if node.status:
+                text_box.delch(cur_pos[0], cur_pos[1]-1)
+            else:
+                text_box.addch(node.char)
 
         elif char in ('s', 'S'):
 
             # Redo the last thing
-            pass
+            node = tree.move_forward()
+
+            if node.status:
+                text_box.addch(node.char)
+            else:
+                text_box.delch(cur_pos[0], cur_pos[1] - 1)
 
         elif char in ('e', 'E'):
 
