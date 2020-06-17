@@ -4,6 +4,12 @@ Tree of changes records all the changes to the text and allows for more than lin
 
 # Example of functionality:
 
+```bash
+git clone https://github.com/LastGenius-edu/text_editor_tree.git
+cd text_editor_tree
+python3 main.py
+```
+
 Example file went from empty in four different ways:
 
 ![](https://raw.githubusercontent.com/LastGenius-edu/text_editor_tree/master/img1.png)
